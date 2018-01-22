@@ -25,7 +25,6 @@ def process(filename, title):
     plt.ylabel(u'$x^2,\, м^2$')
     plt.xlabel('$t$')
     for row in data.as_matrix():
-        plt.axis((0, 800, 0, 0.0035))
         plt.errorbar(x=row[1], y=row[5],
                      xerr=0.3, yerr=row[6],
                      label=True, color='#C00000')
