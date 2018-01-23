@@ -9,15 +9,18 @@ def process(filename, title):
 
     data['t_dif'] = pandas.Series([(t - data['t'][i - 1] if i != 0 else t) for i, t in enumerate(data['t'])])
     data['x_norm'] = data['x'] * 0.001
+    data['dist'] = pandas.Series([(x - data['x_norm'][i - 1] if i != 0 else x) for i, x in enumerate(data['x_norm'])])
+    data['int_center'] = pandas.Series([x - data['dist'][i] / 2 for i, x in enumerate(data['x_norm'])])
 
-    data['v'] = pandas.Series([0.005 / t for t in data['t_dif']])
-    data['delta_v'] = pandas.Series([(0.1 + (0.3 / t)) * (0.005 / t) for t in data['t_dif']])
+    data['v'] = pandas.Series([data['dist'][i] / t for i, t in enumerate(data['t_dif'])])
+    data['delta_v'] = pandas.Series([((0.001 / data['dist'][i]) + (0.3 / t)) * data['v'][i]
+                                     for i, t in enumerate(data['t_dif'])])
 
-    data['x2_norm'] = data['x_norm'] ** 2
-    data['delta_x2'] = pandas.Series([(x ** 2) * (0.001 / x) for x in data['x_norm']])
+    data['x2_norm'] = data['int_center'] ** 2
+    data['delta_x2'] = pandas.Series([data['x2_norm'][i] * (0.001 / x) for i, x in enumerate(data['int_center'])])
 
-    data['1/x_norm'] = 1 / data['x_norm']
-    data['delta_1/x'] = pandas.Series([(1 / x) * (0.001 / x) for x in data['x_norm']])
+    data['1/x_norm'] = 1 / data['int_center']
+    data['delta_1/x'] = pandas.Series([(1 / x) * (0.001 / x) for x in data['int_center']])
 
     print(data)
 
@@ -25,8 +28,8 @@ def process(filename, title):
     plt.ylabel(u'$x^2,\, м^2$')
     plt.xlabel('$t$')
     for row in data.as_matrix():
-        plt.errorbar(x=row[1], y=row[6],
-                     xerr=0.3, yerr=row[7],
+        plt.errorbar(x=row[1], y=row[8],
+                     xerr=0.3, yerr=row[9],
                      label=True, color='#C00000')
 
     mng = plt.get_current_fig_manager()
@@ -45,8 +48,8 @@ def process(filename, title):
     plt.xlabel(u'$1/x,\, м^{-1}$')
     plt.ylabel(u'$V, м/с$')
     for row in data.as_matrix():
-        plt.errorbar(x=row[8], y=row[4],
-                     xerr=row[9], yerr=row[5],
+        plt.errorbar(x=row[10], y=row[6],
+                     xerr=row[11], yerr=row[7],
                      label=True, color='#0000C0')
 
     mng = plt.get_current_fig_manager()
