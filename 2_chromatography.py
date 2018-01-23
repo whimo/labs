@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 
 def process(filename, title):
-    data = pandas.read_csv('res_down.csv')
+    data = pandas.read_csv(filename)
 
     data['t_dif'] = pandas.Series([(t - data['t'][i - 1] if i != 0 else t) for i, t in enumerate(data['t'])])
     data['x_norm'] = data['x'] * 0.001
@@ -62,5 +62,5 @@ def process(filename, title):
     plt.show()
 
 
-process('data_down.csv', u'Вниз по капилляру')
-process('data_up.csv', u'Вверх по капилляру')
+process('res_down.csv', u'Вниз по капилляру')
+process('res_up.csv', u'Вверх по капилляру')
