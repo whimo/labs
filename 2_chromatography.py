@@ -30,7 +30,15 @@ def process(filename, title):
                      label=True, color='#C00000')
 
     mng = plt.get_current_fig_manager()
-    mng.resize(*mng.window.maxsize())
+    try:
+        mng.window.state('zoomed')
+
+    except Exception:
+        try:
+            mng.resize(*mng.window.maxsize())
+        except Exception:
+            pass
+
     plt.show()
 
     plt.title(title)
@@ -42,7 +50,15 @@ def process(filename, title):
                      label=True, color='#0000C0')
 
     mng = plt.get_current_fig_manager()
-    mng.resize(*mng.window.maxsize())
+    try:
+        mng.window.state('zoomed')
+
+    except Exception:
+        try:
+            mng.resize(*mng.window.maxsize())
+        except Exception:
+            pass
+
     plt.show()
 
 
